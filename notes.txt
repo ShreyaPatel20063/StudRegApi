@@ -1,0 +1,3 @@
+﻿to get these classes for connection, use the below command after installing entity framework, its sqlserver and tools
+scaffold-dbcontext "Data Source=Shreya\SQLEXPRESS;Initial Catalog=StudentsDB;Integrated Security=True; Encrypt=False;Connection Timeout=3600;" Microsoft.EntityFrameworkCore.SqlServer -outputDir Models
+add this class to program.cs
