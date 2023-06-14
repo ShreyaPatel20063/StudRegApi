@@ -16,7 +16,7 @@ namespace SutdManagmentSysAPI.Controllers
         } 
 
         [HttpGet]  // api/api reults in select all
-        public async Task<ActionResult<List<Tblstud>>> GetStud()
+        public async Task<ActionResult<IEnumerable<Tblstud>>> GetStud()
         {
             if (_res.Tblstuds == null)
             {
@@ -122,7 +122,7 @@ namespace SutdManagmentSysAPI.Controllers
         // ALL METHODS
         // route = api/api/course
         [HttpGet("course")]
-        public async Task<ActionResult<List<Tblcourse>>> GetCourses()
+        public async Task<ActionResult<IEnumerable<Tblcourse>>> GetCourses()
         {
             if(_res.Tblcourses == null)
             {
@@ -149,11 +149,32 @@ namespace SutdManagmentSysAPI.Controllers
             return course;
         }
 
+        [HttpPost("course")]
+        public async Task<ActionResult<Tblcourse>> PostCourse(Tblcourse cs)
+        {
+            if(_res.Tblcourses == null)
+            {
+                return Problem("TblCourse is null ");
+            }
+            _res.Tblcourses.Add(cs);
+            try
+            {
+                await _res.SaveChangesAsync();
+            }
+            catch (Exception) {
+                if (courseExists(cs.Cid))
+                    return Conflict();
+                else
+                    throw;
+            }
+            return CreatedAtAction("GetCourses", new { id = cs.Cid }, cs);
+        }
 
-        //private bool courseExists(int id)
-        //{
-        //    return (_res.Tblcourses?.Any(e => e.Cid == id)).GetValueOrDefault();
-        //}
+
+        private bool courseExists(int id)
+        {
+            return (_res.Tblcourses?.Any(e => e.Cid == id)).GetValueOrDefault();
+        }
 
 
 

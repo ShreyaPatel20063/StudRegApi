@@ -21,7 +21,7 @@ public partial class Tblstud
 
     public int Sem { get; set; }
 
-    public int Per12 { get; set; }
+    public decimal Per12 { get; set; }
 
     public string Add { get; set; } = null!;
 

@@ -45,7 +45,7 @@ public partial class StudentsDbContext : DbContext
 
         modelBuilder.Entity<Tblstud>(entity =>
         {
-            entity.HasKey(e => e.Sid).HasName("PK__tblstud__DDDFDD3609F02235");
+            entity.HasKey(e => e.Sid).HasName("PK__tblstud__DDDFDD364A4150D1");
 
             entity.ToTable("tblstud");
 
@@ -68,7 +68,9 @@ public partial class StudentsDbContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("name");
-            entity.Property(e => e.Per12).HasColumnName("per12");
+            entity.Property(e => e.Per12)
+                .HasColumnType("decimal(5, 2)")
+                .HasColumnName("per12");
             entity.Property(e => e.Rno)
                 .HasMaxLength(10)
                 .IsUnicode(false)
@@ -77,7 +79,7 @@ public partial class StudentsDbContext : DbContext
 
             entity.HasOne(d => d.CidNavigation).WithMany(p => p.Tblstuds)
                 .HasForeignKey(d => d.Cid)
-                .HasConstraintName("FK__tblstud__cid__778AC167");
+                .HasConstraintName("FK__tblstud__cid__7E37BEF6");
         });
 
         modelBuilder.Entity<Test>(entity =>
