@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SutdManagmentSysAPI.Models;
 
+
 namespace SutdManagmentSysAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -38,6 +39,24 @@ namespace SutdManagmentSysAPI.Controllers
                 return NotFound();
             }
             return test;
+        }
+
+        //[HttpGet("{str}")] // api/Api/21dcs results in select where rno like 21dcs
+        [HttpGet("linq/{str}")]
+        public ActionResult<int> GetStudlikeRno(string str)
+        {
+            if(_res.Tblstuds == null)
+            {
+                return NotFound();
+            }
+            
+            var qry1 = _res.Tblstuds.Count( t => EF.Functions.Like(t.Name, str+'%'));
+           
+            if(qry1 == null)
+            {
+                return NotFound();
+            }
+            return Ok(qry1);
         }
 
         [HttpPut("{id}")] // api/api/3 results in update request to server
