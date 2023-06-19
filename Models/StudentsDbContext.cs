@@ -45,13 +45,11 @@ public partial class StudentsDbContext : DbContext
 
         modelBuilder.Entity<Tblstud>(entity =>
         {
-            entity.HasKey(e => e.Sid).HasName("PK__tblstud__DDDFDD364A4150D1");
+            entity.HasKey(e => e.Sid).HasName("PK__tblstud__DDDFDD367618F414");
 
             entity.ToTable("tblstud");
 
-            entity.Property(e => e.Sid)
-                .ValueGeneratedNever()
-                .HasColumnName("sid");
+            entity.Property(e => e.Sid).HasColumnName("sid");
             entity.Property(e => e.Add)
                 .IsUnicode(false)
                 .HasColumnName("add");
@@ -79,7 +77,7 @@ public partial class StudentsDbContext : DbContext
 
             entity.HasOne(d => d.CidNavigation).WithMany(p => p.Tblstuds)
                 .HasForeignKey(d => d.Cid)
-                .HasConstraintName("FK__tblstud__cid__7E37BEF6");
+                .HasConstraintName("FK__tblstud__cid__04E4BC85");
         });
 
         modelBuilder.Entity<Test>(entity =>

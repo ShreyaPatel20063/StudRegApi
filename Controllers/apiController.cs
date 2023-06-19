@@ -43,20 +43,21 @@ namespace SutdManagmentSysAPI.Controllers
 
         //[HttpGet("{str}")] // api/Api/21dcs results in select where rno like 21dcs
         [HttpGet("linq/{str}")]
-        public ActionResult<int> GetStudlikeRno(string str)
+        public async Task<ActionResult<IEnumerable<string>>> GetStudlikeRno(string str)
         {
             if(_res.Tblstuds == null)
             {
                 return NotFound();
             }
             
-            var qry1 = _res.Tblstuds.Count( t => EF.Functions.Like(t.Name, str+'%'));
-           
-            if(qry1 == null)
+            var qry1 = _res.Tblstuds.Where( t => EF.Functions.Like(t.Rno, str+'%')).Select(t=>t.Rno);
+            var qry = await qry1.ToListAsync();
+
+            if(qry == null)
             {
                 return NotFound();
             }
-            return Ok(qry1);
+            return qry;
         }
 
         [HttpPut("{id}")] // api/api/3 results in update request to server
@@ -66,13 +67,27 @@ namespace SutdManagmentSysAPI.Controllers
             {
                 return BadRequest();
             }
-            _res.Entry(stud).State = EntityState.Modified; // for changing state of entry to modified
+            //_res.Entry(new Tblstud
+            //{
+            //    Name = stud.Name,
+            //    Dob = stud.Dob,
+            //    Gender = stud.Gender,
+            //    Cid = stud.Cid,
+            //    Rno = stud.Rno,
+            //    Div = stud.Div,
+            //    Sem = stud.Sem,
+            //    Per12 = stud.Per12,
+            //    Add = stud.Add,
+            //    CidNavigation = null
+            //}).State = EntityState.Modified; // for changing state of entry to modified
+
+            _res.Entry(stud).State = EntityState.Modified;
 
             try
             {
                 await _res.SaveChangesAsync();
             }
-            catch (Exception )
+            catch (DbUpdateConcurrencyException)
             {
                 if( !studExists(id))
                 {
@@ -93,7 +108,19 @@ namespace SutdManagmentSysAPI.Controllers
             {
                 return Problem("The given request is null and cannot be added");
             }
-            _res.Tblstuds.Add(stud);
+            _res.Tblstuds.Add(new Tblstud
+            {
+                Name=stud.Name,
+                Dob = stud.Dob,
+                Gender = stud.Gender,
+                Cid = stud.Cid,
+                Rno = stud.Rno,
+                Div = stud.Div,
+                Sem = stud.Sem,
+                Per12 = stud.Per12,
+                Add = stud.Add,
+                CidNavigation = null
+            });
             try
             {
                 await _res.SaveChangesAsync();
